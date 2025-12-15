@@ -8,20 +8,20 @@ const mcp = hostedMcpTool({
     "bumpups_send_chat",
     "youtube_find_video"
   ],
-  authorization: "{\"expression\":\"\\"NzQ3ZWM5NTktZWQxYy00NzgwLWJiOGUtYzdjOWRlYjJmZTVlOjNkOTViY2Q5LWViN2QtNDAyZi05YTY5LTU3M2NiODg0MDNiYg==\\"\",\"format\":\"cel\"}",
+  authorization: '{"expression":"\\"NzQ3ZWM5NTktZWQxYy00NzgwLWJiOGUtYzdjOWRlYjJmZTVlOjNkOTViY2Q5LWViN2QtNDAyZi05YTY5LTU3M2NiODg0MDNiYg==\\"","format":"cel"}',
   requireApproval: "always",
   serverUrl: "https://mcp.zapier.com/api/mcp/mcp"
-})
+});
 
 const mcp1 = hostedMcpTool({
   serverLabel: "zapier",
   allowedTools: [
     "youtube_find_video"
   ],
-  authorization: "{\"expression\":\"\\"NzQ3ZWM5NTktZWQxYy00NzgwLWJiOGUtYzdjOWRlYjJmZTVlOjNkOTViY2Q5LWViN2QtNDAyZi05YTY5LTU3M2NiODg0MDNiYg==\\"\",\"format\":\"cel\"}",
+  authorization: '{"expression":"\\"NzQ3ZWM5NTktZWQxYy00NzgwLWJiOGUtYzdjOWRlYjJmZTVlOjNkOTViY2Q5LWViN2QtNDAyZi05YTY5LTU3M2NiODg0MDNiYg==\\"","format":"cel"}',
   requireApproval: "always",
   serverUrl: "https://mcp.zapier.com/api/mcp/mcp"
-})
+});
 
 const YoutubeHelperSchema = z.object({ 
   url: z.string(), 
@@ -73,8 +73,8 @@ const ytBotInstructions = (runContext: RunContext<YtBotContext>, _agent: Agent<Y
 "language":"${stateLanguage}",
 "output_format":"${stateOutputFormat}", 
 
-use the mcp tool, save its response and put it in chat`
-}
+use the mcp tool, save its response and put it in chat`;
+};
 
 const ytBot = new Agent({
   name: "yt bot",
@@ -100,8 +100,8 @@ const ytUiInstructions = (runContext: RunContext<YtUiContext>, _agent: Agent<YtU
 then place in widget
 
 here is the YouTube video:
- ${stateYoutubeurl}`
-}
+ ${stateYoutubeurl}`;
+};
 
 const ytUi = new Agent({
   name: "YT UI",
@@ -121,7 +121,13 @@ type WorkflowInput = { input_as_text: string };
 
 export const runWorkflow = async (workflow: WorkflowInput) => {
   return await withTrace("YouTube link", async () => {
-    const state: any = {
+    const state: {
+      youtubeurl: string | null;
+      prompt: string | null;
+      model: string | null;
+      language: string | null;
+      output_format: string | null;
+    } = {
       youtubeurl: null,
       prompt: null,
       model: null,
@@ -168,11 +174,11 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       [...conversationHistory],
       {
         context: {
-          stateYoutubeurl: state.youtubeurl,
-          stateModel: state.model,
-          statePrompt: state.prompt,
-          stateLanguage: state.language,
-          stateOutputFormat: state.output_format
+          stateYoutubeurl: state.youtubeurl!,
+          stateModel: state.model!,
+          statePrompt: state.prompt!,
+          stateLanguage: state.language!,
+          stateOutputFormat: state.output_format!
         }
       }
     );
@@ -192,7 +198,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       [...conversationHistory],
       {
         context: {
-          stateYoutubeurl: state.youtubeurl
+          stateYoutubeurl: state.youtubeurl!
         }
       }
     );
@@ -213,4 +219,4 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       video: ytUiResult.output_parsed
     };
   });
-}
+};
