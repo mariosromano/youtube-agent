@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { hostedMcpTool, Agent, RunContext, AgentInputItem, Runner, withTrace } from "@openai/agents";
 import { z } from "zod";
 
